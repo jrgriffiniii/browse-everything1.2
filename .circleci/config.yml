@@ -1,0 +1,60 @@
+---
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/browse-everything
+    docker:
+      - image: cimg/ruby:2.7.5
+        environment:
+          RAILS_ENV: test
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - browse-everything-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Configure the path for Bundler
+          command: bundle config set --local path 'vendor/bundle'
+      - run:
+          name: Install Gem dependencies
+          command: bundle check || bundle install --jobs 4 --retry 3
+      - save_cache:
+          key: browse-everything-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ./vendor/bundle
+      - persist_to_workspace:
+          root: '~/browse-everything'
+          paths: '*'
+
+  lint:
+    working_directory: ~/browse-everything
+    docker:
+      - image: cimg/ruby:2.7.5
+        environment:
+          RAILS_ENV: test
+
+    steps:
+      - attach_workspace:
+          at: '~/browse-everything'
+      - restore_cache:
+          keys:
+            - browse-everything-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Configure the path for Bundler
+          command: bundle config set --local path 'vendor/bundle'
+      - run:
+          name: Install Gem dependencies
+          command: bundle check || bundle install --jobs 4 --retry 3
+      - run:
+          name: Lint the Ruby source files using RuboCop
+          command: bundle exec rubocop
+
+workflows:
+  ci:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
