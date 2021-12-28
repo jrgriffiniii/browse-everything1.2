@@ -20,4 +20,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", "~> 6.1.4", ">= 6.1.4.4"
 
   spec.add_development_dependency 'bixby', '~> 3.0.2', '>= 3.0.2'
+  spec.add_development_dependency 'database_cleaner-active_record', '~> 2.0.1', '>= 2.0.1'
+  spec.add_development_dependency 'rails-controller-testing', '~> 1.0.5', '>= 1.0.5'
+  spec.add_development_dependency 'rspec-rails', '~> 5.0.2', '>= 5.0.2'
+  spec.add_development_dependency 'rspec', '~> 3.10.0', '>= 3.10.0'
+  spec.add_development_dependency 'simplecov', '~> 0.21.2', '>= 0.21.2'
 end
