@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative "lib/browse_everything/version"
 
 Gem::Specification.new do |spec|
@@ -17,4 +18,6 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "LICENSE.txt", "Rakefile", "README.md"]
 
   spec.add_dependency "rails", "~> 6.1.4", ">= 6.1.4.4"
+
+  spec.add_development_dependency 'bixby', '~> 3.0.2', '>= 3.0.2'
 end
