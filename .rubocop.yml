@@ -4,3 +4,15 @@ inherit_gem:
 
 AllCops:
   TargetRubyVersion: 2.7
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/lib/browse_everything/driver/file_system_spec.rb'
+
+Style/GuardClause:
+  Exclude:
+    - 'lib/browse_everything/driver/file_system.rb'
+
+RSpec/ExampleLength:
+  Exclude:
+    - 'spec/lib/browse_everything/driver/file_system_spec.rb'

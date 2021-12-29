@@ -3,5 +3,6 @@ require "browse_everything/version"
 require "browse_everything/engine"
 
 module BrowseEverything
-  # Your code goes here...
+  autoload :Driver, 'browse_everything/driver'
+  autoload :Upload, 'browse_everything/upload'
 end

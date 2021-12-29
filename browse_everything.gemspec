@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bixby', '~> 3.0.2', '>= 3.0.2'
   spec.add_development_dependency 'database_cleaner-active_record', '~> 2.0.1', '>= 2.0.1'
+  spec.add_development_dependency 'pry-byebug', '~> 3.9.0', '>= 3.9.0'
   spec.add_development_dependency 'rails-controller-testing', '~> 1.0.5', '>= 1.0.5'
   spec.add_development_dependency 'rspec-rails', '~> 5.0.2', '>= 5.0.2'
   spec.add_development_dependency 'rspec', '~> 3.10.0', '>= 3.10.0'
