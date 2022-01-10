@@ -12,6 +12,6 @@ module BrowseEverything
     config.assets.paths << "#{bootstrap_sass_path}/assets/stylesheets"
     config.assets.paths << "#{bootstrap_sass_path}/assets/javascripts"
 
-    config.assets.precompile += %w( browse_everything/browse_everything.js )
+    config.assets.precompile += %w[browse_everything/browse_everything.js]
   end
 end

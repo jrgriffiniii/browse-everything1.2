@@ -27,12 +27,10 @@ module BrowseEverything
       end
 
       def configuration
-        begin
-          @config = parse_configuration
-        rescue Errno::ENOENT
-          Rails.logger.warn("browse_everything_providers.yml configuration file not found at #{configuration_path}")
-          @config = ActiveSupport::HashWithIndifferentAccess.new({})
-        end
+        @config = parse_configuration
+      rescue Errno::ENOENT
+        Rails.logger.warn("browse_everything_providers.yml configuration file not found at #{configuration_path}")
+        @config = ActiveSupport::HashWithIndifferentAccess.new({})
       end
 
       def build_driver(key:, **options)
