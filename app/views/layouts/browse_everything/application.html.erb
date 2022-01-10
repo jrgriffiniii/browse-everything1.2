@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Browse everything</title>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+  <head>
+    <title>BrowseEverything</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag    "browse_everything/application", media: "all" %>
-</head>
-<body>
+    <%= stylesheet_link_tag "browse_everything/application", media: "all" %>
+    <%= javascript_include_tag "browse_everything/browse_everything" %>
+  </head>
+  <body>
 
-<%= yield %>
+    <%= yield %>
 
-</body>
+  </body>
 </html>

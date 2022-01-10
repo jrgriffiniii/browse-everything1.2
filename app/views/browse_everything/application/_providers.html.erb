@@ -1,0 +1,12 @@
+<form class="form-inline">
+  <label target="provider-select">Source:</label>
+
+  <%# form-control class for bootstrap3, custom-select class for bootstrap4 %>
+  <select class="form-control custom-select" id="provider-select">
+    <% @providers.each do |provider| %>
+      <option value="<%= provider.key %>">
+        <%= provider.name %>
+      </option>
+    <% end %>
+  </select>
+</form>

@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.name        = "browse_everything"
   spec.version     = BrowseEverything::VERSION
   spec.authors     = ['Jessie Keck', 'Michael B. Klein', 'Thomas Scherz', 'Xiaoming Wang', 'James R. Griffin III']
-  spec.email       = ['jkeck@stanford.edu', 'mbklein@gmail.com', 'scherztc@ucmail.uc.edu', 'xw5d@virginia.edu', "jrgriffiniii@protonmail.com"]
+  spec.email       = ['jkeck@stanford.edu', 'mbklein@gmail.com', 'scherztc@ucmail.uc.edu', 'xw5d@virginia.edu', "jrg5@princeton.edu"]
   spec.homepage    = "https://github.com/samvera/browse-everything"
   spec.summary     = 'AJAX/Rails engine file browser for cloud storage services'
   spec.description = 'AJAX/Rails engine file browser for cloud storage services'
@@ -17,7 +17,11 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir["{app,config,db,lib}/**/*", "LICENSE.txt", "Rakefile", "README.md"]
 
+  spec.add_dependency "bootstrap-sass", "~> 3.0"
+  spec.add_dependency "ejs", "~> 1.1"
+  spec.add_dependency "jquery-rails", "~> 4.0"
   spec.add_dependency "rails", "~> 6.1.4", ">= 6.1.4.4"
+  spec.add_dependency 'sass-rails', '~> 5.0'
 
   spec.add_development_dependency 'bixby', '~> 3.0.2', '>= 3.0.2'
   spec.add_development_dependency 'database_cleaner-active_record', '~> 2.0.1', '>= 2.0.1'
