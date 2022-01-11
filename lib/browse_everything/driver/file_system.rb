@@ -28,15 +28,15 @@ module BrowseEverything
 
           expanded_resource_path = File.expand_path(@uri_path)
           @local_path = Pathname.new(expanded_resource_path)
+          # binding.pry
 
           @parent = options[:parent]
-          @uri = "file://#{path}"
+          @uri = "file://#{local_path}"
         end
 
         def path
           @path ||= begin
                       leaf_path = if !parent.nil?
-                                    parent_path = parent.path
                                     basename = File.basename(@uri_path)
                                     File.join(parent.path, basename)
                                   else
@@ -59,13 +59,14 @@ module BrowseEverything
           @children ||= begin
                           child_entries = Dir.children(local_path)
                           child_entries.map do |child_entry|
-                            #child_path = "#{local_path}/#{child_entry}"
                             child_path = File.join(local_path, child_entry)
                             child_uri = "file://#{child_path}"
 
                             if File.directory?(child_path)
+                              # binding.pry
                               self.class.new(uri: child_uri, parent: self)
                             else
+                              # binding.pry
                               FileUpload.new(uri: child_uri, parent: self)
                             end
                           end
@@ -109,11 +110,11 @@ module BrowseEverything
           @flatten ||= begin
                          values = []
                          children.each do |child|
-                          if child.is_a?(DirectoryUpload)
-                            values += child.flatten
-                          else
-                            values << child
-                          end
+                           if child.is_a?(DirectoryUpload)
+                             values += child.flatten
+                           else
+                             values << child
+                           end
                          end
                          values
                        end
@@ -121,7 +122,18 @@ module BrowseEverything
       end
 
       class Pages
-        attr_reader :elements, :page_length
+        # attr_reader :elements, :page_length
+        attr_reader :pages, :page_length
+
+        def self.build(resource_tree:, page_length: Page::DEFAULT_LENGTH)
+          elements = [resource_tree] + resource_tree.flatten
+          slices = elements.each_slice(page_length)
+          pages = slices.map do |slice|
+            Page.new(elements: slice)
+          end
+
+          new(pages: pages, page_length: page_length)
+        end
 
         def initialize(pages: nil, elements: [], page_length: Page::DEFAULT_LENGTH)
           @pages = pages
@@ -129,14 +141,14 @@ module BrowseEverything
           @page_length = page_length
         end
 
-        def pages
-          @pages ||= begin
-                       slices = elements.each_slice(page_length)
-                       slices.map do |slice|
-                         Page.new(elements: slice)
-                       end
-                     end
-        end
+        #         def pages
+        #           @pages ||= begin
+        #                        slices = elements.each_slice(page_length)
+        #                        slices.map do |slice|
+        #                          Page.new(elements: slice)
+        #                        end
+        #                      end
+        #         end
 
         delegate :empty?, to: :pages
         delegate :first, to: :pages
@@ -151,6 +163,8 @@ module BrowseEverything
         def initialize(elements:)
           @elements = elements
         end
+
+        delegate :[], to: :elements
 
         delegate :empty?, to: :elements
         delegate :first, to: :elements
@@ -168,7 +182,7 @@ module BrowseEverything
 
       def resolve(uri:)
         resource_tree = ResourceTree.new(root_uri: uri)
-        Pages.new(elements: resource_tree.flatten)
+        Pages.build(resource_tree: resource_tree)
       end
 
       def root_path
@@ -179,8 +193,13 @@ module BrowseEverything
       # @param path [String] the path to a file system resource
       # @return [Array<BrowseEverything::RemoteFile>]
       def contents(path: nil)
-        path ||= root_path
-        full_path = Pathname.new("#{root_path}#{path}")
+        # path ||= root_path
+        full_path = if path.nil?
+                      Pathname.new(root_path)
+                    else
+                      joined = File.join(root_path, path)
+                      Pathname.new(joined)
+                    end
         uri = "file://#{full_path}"
 
         resolve(uri: uri)
@@ -208,8 +227,6 @@ module BrowseEverything
       def paginate(remote_resource)
         current_page << remote_resource
       end
-
-
 
       def link_for(path)
         full_path = File.expand_path(path)
