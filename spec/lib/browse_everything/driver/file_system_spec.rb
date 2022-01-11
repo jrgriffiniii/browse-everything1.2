@@ -8,7 +8,7 @@ describe BrowseEverything::Driver::FileSystem do
   describe '.new' do
     context 'with invalid configuration values' do
       it 'raises an error' do
-        expect { described_class.new }.to raise_error(RuntimeError)
+        expect { described_class.new }.to raise_error(StandardError)
       end
     end
   end
@@ -19,7 +19,7 @@ describe BrowseEverything::Driver::FileSystem do
       expect(pages).not_to be_empty
       page = pages.first
       expect(page.children.length).to eq(1)
-      expect(page.children.first).to be_a(BrowseEverything::Upload::FileSystem::Directory)
+      expect(page.children.first).to be_a(BrowseEverything::Driver::FileSystem::DirectoryUpload)
       expect(page.children.first.path.to_s).to eq("#{home}/")
     end
 
@@ -27,12 +27,20 @@ describe BrowseEverything::Driver::FileSystem do
       it 'builds a page of file entries restricted to this path' do
         pages = file_system.contents(path: '/test')
         expect(pages).not_to be_empty
+        expect(pages.length).to eq(1)
         page = pages.first
-        expect(page.children.length).to eq(1)
-        expect(page.children.first).to be_a(BrowseEverything::Upload::FileSystem::Directory)
+        expect(page).to be_a(BrowseEverything::Driver::FileSystem::Page)
 
-        requested_path = File.join(home, '/test')
-        expect(page.children.first.path.to_s).to eq(requested_path)
+        expect(page).not_to be_empty
+        expect(page.length).to eq(1)
+        file_upload = page.elements.first
+        expect(file_upload).to be_a(BrowseEverything::Driver::FileSystem::FileUpload)
+
+        local_path = File.join(home, '/test', 'file_1.pdf')
+        expect(file_upload.local_path.to_s).to eq(local_path)
+        path = File.join('/test', 'file_1.pdf')
+        expect(file_upload.path.to_s).to eq(path)
+        expect(file_upload.uri.to_s).to eq("file://#{path}")
       end
     end
   end

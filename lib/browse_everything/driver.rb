@@ -5,7 +5,6 @@ module BrowseEverything
     # Configuration errors
     class ConfigurationError < RuntimeError; end
 
-    autoload :Page,        'browse_everything/driver/page'
     autoload :Base,        'browse_everything/driver/base'
     # autoload :Box,         'browse_everything/driver/box'
     # autoload :Dropbox,     'browse_everything/driver/dropbox'
@@ -33,19 +32,19 @@ module BrowseEverything
         @config = ActiveSupport::HashWithIndifferentAccess.new({})
       end
 
-      def build_driver(key:, **options)
-        case key
+      def build(id:, **options)
+        case id
         when :file_system
           FileSystem.new(**options)
         else
-          raise(NotImplementedError, "Data source driver not supported for #{key}")
+          raise(NotImplementedError, "Data source driver not supported for #{id}")
         end
       end
 
       def all
         @all ||= begin
                    configuration.map do |key, options|
-                     build_driver(key: key, **options)
+                     build(id: key, **options)
                    end
                  end
       end

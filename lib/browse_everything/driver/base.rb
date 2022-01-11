@@ -8,27 +8,50 @@ module BrowseEverything
 
       # Provide accessor and mutator methods for @token and @code
       # attr_accessor :token, :code
+      attr_reader :id
 
       # Constructor
       # @param options [Hash] configuration for the driver
       def initialize(**options)
+        @id = options.delete(:id)
         @options = options
 
-        validate_config
+        raise(StandardError, "Invalid configuration options: #{options}") unless configuration.valid?
       end
 
-      def build_config
-        ActiveSupport::HashWithIndifferentAccess.new(@options)
+      def attributes
+        {
+          id: id
+        }
       end
 
-      # Ensure that the configuration Hash has indifferent access
-      # @return [ActiveSupport::HashWithIndifferentAccess]
-      def config
-        @config ||= build_config
+      def as_json
+        attributes.to_json
       end
 
-      # Abstract method
-      def validate_config; end
+      class Configuration < OpenStruct
+        def valid?
+          true
+        end
+      end
+
+      def self.configuration_class
+        Configuration
+      end
+
+      def self.build_configuration(**options)
+        configuration_class.new(**options)
+      end
+
+      def configuration
+        @configuration ||= self.class.build_configuration(**@options)
+      end
+
+      delegate :name, to: :configuration
+
+      def resolve(*); end
+
+      ####
 
       # Generate the key for the driver
       # @return [String]
@@ -47,9 +70,6 @@ module BrowseEverything
 
       # Generate the name for the driver
       # @return [String]
-      def name
-        @name ||= (config[:name] || key.titleize)
-      end
 
       # Abstract method
       def contents(*_args)
