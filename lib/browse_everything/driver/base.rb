@@ -49,7 +49,13 @@ module BrowseEverything
 
       delegate :name, to: :configuration
 
+      # Abstract method
       def resolve(*); end
+
+      # Abstract method
+      def authorized?
+        false
+      end
 
       ####
 
@@ -81,11 +87,6 @@ module BrowseEverything
       # @return [Array<String, Hash>]
       def link_for(path)
         [path, { file_name: File.basename(path) }]
-      end
-
-      # Abstract method
-      def authorized?
-        false
       end
 
       # Abstract method

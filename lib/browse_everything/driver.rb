@@ -32,10 +32,10 @@ module BrowseEverything
         @config = ActiveSupport::HashWithIndifferentAccess.new({})
       end
 
-      def build(id:, **options)
+      def build(id:, **_options)
         case id
         when :file_system
-          FileSystem.new(**options)
+          FileSystem.new(**configuration[id])
         else
           raise(NotImplementedError, "Data source driver not supported for #{id}")
         end

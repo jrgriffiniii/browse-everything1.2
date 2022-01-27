@@ -28,10 +28,20 @@ module BrowseEverything
 
           expanded_resource_path = File.expand_path(@uri_path)
           @local_path = Pathname.new(expanded_resource_path)
-          # binding.pry
 
           @parent = options[:parent]
           @uri = "file://#{local_path}"
+        end
+
+        def attributes
+          {
+            path: path,
+            parent: parent
+          }
+        end
+
+        def as_json
+          attributes.to_json
         end
 
         def path
@@ -63,10 +73,8 @@ module BrowseEverything
                             child_uri = "file://#{child_path}"
 
                             if File.directory?(child_path)
-                              # binding.pry
                               self.class.new(uri: child_uri, parent: self)
                             else
-                              # binding.pry
                               FileUpload.new(uri: child_uri, parent: self)
                             end
                           end
@@ -119,14 +127,23 @@ module BrowseEverything
                          values
                        end
         end
+        alias to_a flatten
+
+        def attributes
+          {
+            root: root.attributes,
+            children: children.map(&:attributes)
+          }
+        end
+
+        delegate :as_json, to: :attributes
       end
 
       class Pages
-        # attr_reader :elements, :page_length
         attr_reader :pages, :page_length
 
         def self.build(resource_tree:, page_length: Page::DEFAULT_LENGTH)
-          elements = [resource_tree] + resource_tree.flatten
+          elements = [resource_tree] + resource_tree.to_a
           slices = elements.each_slice(page_length)
           pages = slices.map do |slice|
             Page.new(elements: slice)
@@ -141,19 +158,19 @@ module BrowseEverything
           @page_length = page_length
         end
 
-        #         def pages
-        #           @pages ||= begin
-        #                        slices = elements.each_slice(page_length)
-        #                        slices.map do |slice|
-        #                          Page.new(elements: slice)
-        #                        end
-        #                      end
-        #         end
-
         delegate :empty?, to: :pages
         delegate :first, to: :pages
         delegate :last, to: :pages
         delegate :length, to: :pages
+        delegate :to_a, to: :pages
+
+        def attributes
+          to_a
+        end
+
+        def as_json
+          attributes.to_json
+        end
       end
 
       class Page
@@ -165,17 +182,20 @@ module BrowseEverything
         end
 
         delegate :[], to: :elements
-
         delegate :empty?, to: :elements
         delegate :first, to: :elements
         delegate :last, to: :elements
         delegate :length, to: :elements
+        delegate :to_a, to: :elements
       end
+
+      attr_reader :root_path
 
       # Constructor
       # @param options [Hash] configuration for the driver
       def initialize(**options)
-        @root_path = options[:root_path]
+        home_option = options[:home]
+        @root_path = File.expand_path(home_option) if home_option
 
         super(**options)
       end
@@ -185,15 +205,16 @@ module BrowseEverything
         Pages.build(resource_tree: resource_tree)
       end
 
-      def root_path
-        @root_path ||= configuration[:home]
-      end
+      # def root_path
+      #  @root_path ||= begin
+      #                   File.expand_path(configuration[:home])
+      #                 end
+      # end
 
       # Retrieve the contents of a directory
       # @param path [String] the path to a file system resource
       # @return [Array<BrowseEverything::RemoteFile>]
-      def contents(path: nil)
-        # path ||= root_path
+      def browse(path: nil)
         full_path = if path.nil?
                       Pathname.new(root_path)
                     else
@@ -204,7 +225,9 @@ module BrowseEverything
 
         resolve(uri: uri)
       end
+      alias contents browse
 
+      # Legacy Methods (to be removed)
       ####
 
       def icon

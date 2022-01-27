@@ -1,0 +1,24 @@
+<div class="container-fluid">
+  <h2>Storage Providers</h2>
+  <form class="navbar-form navbar-left" role="search">
+    <div class="form-group">
+      <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Select a Provider <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Hosted Providers</li>
+          <li><a href="providers/aws">Amazon Web Services</a></li>
+          <li><a href="providers/google-drive">Google Drive</a></li>
+          <li class="dropdown-header">Local Providers</li>
+          <li><a href="<%= provider_path(id: 'file_system') %>">File System</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Select</button>
+      </span>
+    </div><!-- /input-group -->
+  </form>
+</div>

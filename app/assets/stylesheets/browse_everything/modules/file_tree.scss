@@ -1,0 +1,101 @@
+
+.view {
+  position: relative;
+  height: 100%;
+  box-shadow: 12px 24px 4px rgba(0, 0, 0, 0.25);
+  z-index:10;
+  overflow-y:auto;
+  padding-left:20px;
+  padding-right:20px;
+  padding-top:10px;
+  padding-bottom:10px;
+
+  .folder {
+    display: block;
+    border: 1px solid transparent;
+    overflow: hidden;
+    max-height: 1000px;
+
+    & > input { display:none; }
+
+    .label {
+      font-size:14px;
+      text-align: inherit;
+      padding-bottom: 0px;
+      margin-bottom: 0px;
+    }
+
+    .file, .folder {
+      padding-left:20px;
+      animation:push 0.25s;
+    }
+
+    & > .label > .text {
+      margin-left: 0.4rem;
+    }
+
+    &__children {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .file {
+    display: block;
+    padding-left:20px;
+  }
+
+  .label, .file {
+    display: inline-block;
+    color: #222222;
+    font-size:12px;
+    overflow:hidden;
+
+    &:hover {
+      cursor:pointer;
+      .text {
+        text-decoration:underline;
+      }
+    }
+
+    i {
+      line-height:12px;
+      height:20px;
+      padding:0px;
+      margin:0px;
+      vertical-align:middle;
+      &.hide{ display:none; }
+    }
+
+    .text {
+      display:inline-block;
+    }
+  }
+
+  input:checked ~ .folder__node,
+  input:checked ~ .folder__children, {
+    animation: pull 0.25s, hide 1s infinite;
+    animation-delay: 0s, 0.25s;
+  }
+
+  /*
+  input:checked ~ .label {
+    i.hide{ display:inline-block; }
+    i.show{ display:none; }
+  }
+  */
+}
+
+@keyframes pull{
+  from{ opacity:1; transform:translateY(0px);}
+  to{ opacity:0; transform:translateY(-20px);}
+}
+@keyframes push{
+  from{ opacity:0; transform:translateY(-20px);}
+  to{ opacity:1; transform:translateY(0px);}
+}
+
+@keyframes hide{
+  from, to{ max-height:0px; opacity:0;}
+}
+
