@@ -170,7 +170,7 @@ module BrowseEverything
         end
 
         delegate :empty?, to: :pages
-        #delegate :first, to: :pages
+        # delegate :first, to: :pages
         delegate :last, to: :pages
         delegate :length, to: :pages
         delegate :to_a, to: :pages

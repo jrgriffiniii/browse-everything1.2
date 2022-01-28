@@ -30,10 +30,10 @@ module BrowseEverything
       end
 
       def parse_configuration
-        #config_file_content = File.read(configuration_path)
-        #config_file_template = ERB.new(config_file_content)
-        #config_values = YAML.safe_load(config_file_template.result, [Symbol])
-        #config = ActiveSupport::HashWithIndifferentAccess.new(config_values)
+        # config_file_content = File.read(configuration_path)
+        # config_file_template = ERB.new(config_file_content)
+        # config_values = YAML.safe_load(config_file_template.result, [Symbol])
+        # config = ActiveSupport::HashWithIndifferentAccess.new(config_values)
         config_values.deep_symbolize_keys
       end
 
