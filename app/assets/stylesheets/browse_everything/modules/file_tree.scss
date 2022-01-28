@@ -1,20 +1,24 @@
 
 .view {
-  position: relative;
-  height: 100%;
-  box-shadow: 12px 24px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 8px 12px 4px rgba(0, 0, 0, 0.25);
   z-index:10;
-  overflow-y:auto;
+
   padding-left:20px;
   padding-right:20px;
   padding-top:10px;
   padding-bottom:10px;
 
+  overflow-y: scroll;
+  max-height: 576px;
+  border: 0.4rem solid #444;
+  border-radius: 0.6rem;
+
+  margin-left: 0.8rem;
+  margin-right: 0.8rem;
+
   .folder {
     display: block;
     border: 1px solid transparent;
-    overflow: hidden;
-    max-height: 1000px;
 
     & > input { display:none; }
 
@@ -77,13 +81,6 @@
     animation: pull 0.25s, hide 1s infinite;
     animation-delay: 0s, 0.25s;
   }
-
-  /*
-  input:checked ~ .label {
-    i.hide{ display:inline-block; }
-    i.show{ display:none; }
-  }
-  */
 }
 
 @keyframes pull{

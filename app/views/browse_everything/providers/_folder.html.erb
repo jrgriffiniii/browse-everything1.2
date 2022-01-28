@@ -1,0 +1,22 @@
+
+<div class="folder">
+  <input type="checkbox" id="folder_1" />
+  <label class="label" for="folder_1">
+    <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+    <div class="text"><%= node.basename %></div>
+  </label>
+
+  <% if node.is_a?(BrowseEverything::Driver::FileSystem::ResourceTree) && !node.children.empty? %>
+    <div class="folder__children">
+
+      <% node.children.each do |child| %>
+        <% if child.is_a?(BrowseEverything::Driver::FileSystem::ResourceTree) %>
+          <%= render(partial: 'folder', locals: { node: child }) %>
+        <% else %>
+          <%= render(partial: 'file', locals: { node: child }) %>
+        <% end %>
+      <% end %>
+    </div><!--/.children -->
+  <% end %>
+</div><!--/.folder -->
+

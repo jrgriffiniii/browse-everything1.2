@@ -19,7 +19,7 @@ module BrowseEverything
       end
 
       class ResourceUpload
-        attr_reader :uri, :local_path, :parent
+        attr_reader :local_path, :parent, :uri
 
         def initialize(**options)
           unresolved = options[:uri]
@@ -33,10 +33,13 @@ module BrowseEverything
           @uri = "file://#{local_path}"
         end
 
+        delegate :basename, to: :local_path
+
         def attributes
           {
-            path: path,
-            parent: parent
+            basename: basename,
+            parent: parent,
+            path: path
           }
         end
 
@@ -137,9 +140,11 @@ module BrowseEverything
         end
 
         delegate :as_json, to: :attributes
+        delegate :basename, to: :root
       end
 
       class Pages
+        include Enumerable
         attr_reader :pages, :page_length
 
         def self.build(resource_tree:, page_length: Page::DEFAULT_LENGTH)
@@ -158,8 +163,14 @@ module BrowseEverything
           @page_length = page_length
         end
 
+        def each
+          pages.each do |page|
+            yield page
+          end
+        end
+
         delegate :empty?, to: :pages
-        delegate :first, to: :pages
+        #delegate :first, to: :pages
         delegate :last, to: :pages
         delegate :length, to: :pages
         delegate :to_a, to: :pages
@@ -175,10 +186,18 @@ module BrowseEverything
 
       class Page
         DEFAULT_LENGTH = 25
+
+        include Enumerable
         attr_reader :elements
 
         def initialize(elements:)
           @elements = elements
+        end
+
+        def each
+          elements.each do |element|
+            yield element
+          end
         end
 
         delegate :[], to: :elements
@@ -213,7 +232,7 @@ module BrowseEverything
 
       # Retrieve the contents of a directory
       # @param path [String] the path to a file system resource
-      # @return [Array<BrowseEverything::RemoteFile>]
+      # @return [Pages]
       def browse(path: nil)
         full_path = if path.nil?
                       Pathname.new(root_path)
@@ -227,8 +246,8 @@ module BrowseEverything
       end
       alias contents browse
 
-      # Legacy Methods (to be removed)
-      ####
+      #
+      ## Legacy Methods (to be removed)
 
       def icon
         'file'

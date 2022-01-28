@@ -1,0 +1,6 @@
+
+<div class="view">
+  <% page.each do |node| %>
+    <%= render(partial: 'folder', locals: { node: node }) %>
+  <% end %>
+</div>

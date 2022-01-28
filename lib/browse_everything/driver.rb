@@ -17,12 +17,24 @@ module BrowseEverything
         Rails.root.join('config', 'browse_everything_providers.yml')
       end
 
+      def config_file_content
+        File.read(configuration_path)
+      end
+
+      def config_file_template
+        ERB.new(config_file_content)
+      end
+
+      def config_values
+        YAML.safe_load(config_file_template.result, [Symbol])
+      end
+
       def parse_configuration
-        config_file_content = File.read(configuration_path)
-        config_file_template = ERB.new(config_file_content)
-        config_values = YAML.safe_load(config_file_template.result, [Symbol])
-        config = ActiveSupport::HashWithIndifferentAccess.new(config_values)
-        config.deep_symbolize_keys
+        #config_file_content = File.read(configuration_path)
+        #config_file_template = ERB.new(config_file_content)
+        #config_values = YAML.safe_load(config_file_template.result, [Symbol])
+        #config = ActiveSupport::HashWithIndifferentAccess.new(config_values)
+        config_values.deep_symbolize_keys
       end
 
       def configuration
