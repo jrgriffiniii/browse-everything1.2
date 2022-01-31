@@ -43,8 +43,8 @@ module BrowseEverything
           }
         end
 
-        def as_json
-          attributes.to_json
+        def as_json(*_options)
+          attributes
         end
 
         def path
@@ -179,8 +179,8 @@ module BrowseEverything
           to_a
         end
 
-        def as_json
-          attributes.to_json
+        def as_json(*_options)
+          attributes
         end
       end
 
