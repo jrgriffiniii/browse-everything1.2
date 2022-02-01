@@ -1,4 +1,15 @@
 
-<% @pages.each do |page| %>
-  <%= render(partial: 'page', locals: { page: page }) %>
-<% end %>
+<form class="browse-everything" action="<%= provider_upload_path(id: @provider.id) %>" method="post"  >
+  <% if !@pages.empty? %>
+    <div class="form-group">
+      <% @pages.each do |page| %>
+        <%= render(partial: 'page', locals: { page: page }) %>
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary submit" aria-haspopup="true" aria-expanded="false" disabled>Upload</button>
+      <button type="button" class="btn btn-danger reset" aria-haspopup="true" aria-expanded="false" disabled>Reset</button>
+    </div>
+  <% end %>
+</form>

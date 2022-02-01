@@ -141,6 +141,7 @@ module BrowseEverything
 
         delegate :as_json, to: :attributes
         delegate :basename, to: :root
+        delegate :uri, to: :root
       end
 
       class Pages

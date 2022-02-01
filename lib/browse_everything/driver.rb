@@ -45,9 +45,11 @@ module BrowseEverything
       end
 
       def build(id:, **_options)
+        options = { id: id }.merge(configuration[id])
+
         case id
         when :file_system
-          FileSystem.new(**configuration[id])
+          FileSystem.new(**options)
         else
           raise(NotImplementedError, "Data source driver not supported for #{id}")
         end

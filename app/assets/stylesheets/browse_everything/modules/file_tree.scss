@@ -1,5 +1,5 @@
 
-.view {
+.browse-everything__page {
   box-shadow: 10px 12px 4px rgba(0, 0, 0, 0.25);
   z-index:10;
 
@@ -20,7 +20,8 @@
     display: block;
     border: 1px solid transparent;
 
-    & > input { display:none; }
+    & > input {
+    }
 
     .label {
       font-size:14px;
