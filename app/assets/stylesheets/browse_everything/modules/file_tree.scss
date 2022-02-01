@@ -34,19 +34,23 @@
       animation:push 0.25s;
     }
 
+    .file {
+      display: block;
+      padding-left:20px;
+    }
+
     & > .label > .text {
       margin-left: 0.4rem;
     }
 
     &__children {
-      display: flex;
-      flex-direction: column;
-    }
-  }
+      display: none;
 
-  .file {
-    display: block;
-    padding-left:20px;
+      &.expanded {
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 
   .label, .file {
@@ -76,11 +80,13 @@
     }
   }
 
+  /*
   input:checked ~ .folder__node,
   input:checked ~ .folder__children, {
     animation: pull 0.25s, hide 1s infinite;
     animation-delay: 0s, 0.25s;
   }
+  */
 }
 
 @keyframes pull{

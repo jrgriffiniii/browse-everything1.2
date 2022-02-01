@@ -9,8 +9,6 @@ module BrowseEverything
 
     bootstrap_sass_path = Gem.loaded_specs['bootstrap-sass'].full_gem_path
     config.assets.paths << bootstrap_sass_path
-    # config.assets.paths << "#{bootstrap_sass_path}/assets/stylesheets/bootstrap-sprockets"
-    # config.assets.paths << "#{bootstrap_sass_path}/assets/stylesheets/bootstrap"
     config.assets.paths << "#{bootstrap_sass_path}/assets/fonts"
     config.assets.paths << "#{bootstrap_sass_path}/assets/stylesheets"
     config.assets.paths << "#{bootstrap_sass_path}/assets/javascripts"
