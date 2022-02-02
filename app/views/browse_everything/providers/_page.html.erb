@@ -1,6 +1,10 @@
 
 <div class="browse-everything__page">
   <% page.each do |node| %>
-    <%= render(partial: 'folder', locals: { node: node }) %>
+    <% if node.is_a?(BrowseEverything::Driver::FileSystem::ResourceTree) && !node.children.empty? %>
+      <%= render(partial: 'folder', locals: { node: node }) %>
+    <% else %>
+      <%= render(partial: 'file', locals: { node: node }) %>
+    <% end %>
   <% end %>
 </div>

@@ -65,6 +65,7 @@ module BrowseEverything
       class DirectoryUpload < ResourceUpload
         def initialize(**options)
           super(**options)
+
           raise(StandardError, "#{local_path} is not a valid directory path") unless File.directory?(local_path)
         end
 
@@ -149,11 +150,13 @@ module BrowseEverything
         attr_reader :pages, :page_length
 
         def self.build(resource_tree:, page_length: Page::DEFAULT_LENGTH)
-          elements = [resource_tree] + resource_tree.to_a
-          slices = elements.each_slice(page_length)
-          pages = slices.map do |slice|
-            Page.new(elements: slice)
-          end
+          # elements = [resource_tree] + resource_tree.to_a
+          # slices = elements.each_slice(page_length)
+
+          # pages = slices.map do |slice|
+          #  Page.new(elements: slice)
+          # end
+          pages = [Page.new(elements: resource_tree.to_a)]
 
           new(pages: pages, page_length: page_length)
         end

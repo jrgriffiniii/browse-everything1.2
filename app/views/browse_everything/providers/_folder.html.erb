@@ -3,7 +3,7 @@
   <input type="checkbox" id="<%= node.uri %>" name="<%= node.uri %>" />
   <label class="label">
     <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
-    <div class="text"><%= node.basename %></div>
+    <div class="base-name"><%= node.basename %></div>
   </label>
 
   <% if node.is_a?(BrowseEverything::Driver::FileSystem::ResourceTree) && !node.children.empty? %>

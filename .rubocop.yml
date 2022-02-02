@@ -8,6 +8,7 @@ AllCops:
 Metrics/BlockLength:
   Exclude:
     - 'spec/lib/browse_everything/driver/file_system_spec.rb'
+    - 'spec/requests/browse_everything/providers_spec.rb'
 
 Style/GuardClause:
   Exclude:
@@ -16,6 +17,7 @@ Style/GuardClause:
 RSpec/ExampleLength:
   Exclude:
     - 'spec/lib/browse_everything/driver/file_system_spec.rb'
+    - 'spec/requests/browse_everything/providers_spec.rb'
 
 RSpec/EmptyExampleGroup:
   Exclude:

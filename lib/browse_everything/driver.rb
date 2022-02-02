@@ -34,6 +34,7 @@ module BrowseEverything
         # config_file_template = ERB.new(config_file_content)
         # config_values = YAML.safe_load(config_file_template.result, [Symbol])
         # config = ActiveSupport::HashWithIndifferentAccess.new(config_values)
+
         config_values.deep_symbolize_keys
       end
 
