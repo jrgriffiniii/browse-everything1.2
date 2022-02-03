@@ -11,5 +11,6 @@
       <button type="submit" class="btn btn-primary submit" aria-haspopup="true" aria-expanded="false" disabled>Upload</button>
       <button type="button" class="btn btn-danger reset" aria-haspopup="true" aria-expanded="false" disabled>Reset</button>
     </div>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token, id: :form_token %>
   <% end %>
 </form>

@@ -3,6 +3,23 @@ require_dependency "browse_everything/application_controller"
 
 module BrowseEverything
   class ProvidersController < ApplicationController
+    def upload
+      @upload = BrowseEverything::Upload.new(**upload_attributes)
+      # @todo This is where the job is enqueued
+      # @upload.perform_job_later
+
+      respond_to do |format|
+        format.html do
+          render status: 500 if @upload.persisted?
+          redirect_to action: :index, layout: !request.xhr?
+        end
+        format.json do
+          render json: "Server Error", status: 500 if @upload.nil?
+          render json: @upload
+        end
+      end
+    end
+
     def browse
       @provider = current_provider
       @pages = @provider.browse(path: browse_path)
@@ -44,6 +61,14 @@ module BrowseEverything
     end
 
     private
+
+    def upload_params
+      params.permit(:id, :upload, :authenticity_token)
+    end
+
+    def upload_attributes
+      upload_params[:upload] || {}
+    end
 
     def provider_id
       params[:id]

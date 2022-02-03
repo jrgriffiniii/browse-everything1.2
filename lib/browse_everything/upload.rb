@@ -1,11 +1,49 @@
 # frozen_string_literal: true
 
 module BrowseEverything
-  module Upload
-    autoload(:FileSystem, 'browse_everything/upload/file_system')
+  class Upload
+    class Validator < ActiveModel::Validator
+      def validate(model)
+        model.errors.add(:uris, "There must be at least one URI for Upload Models") if model.uris.blank?
+      end
+    end
 
-    autoload(:Resource, 'browse_everything/upload/resource')
-    autoload(:Directory, 'browse_everything/upload/directory')
-    autoload(:File, 'browse_everything/upload/file')
+    include ActiveModel::Model
+    include ActiveModel::Serialization
+    include ActiveModel::Validations::Callbacks
+
+    attr_accessor :uris
+    validates_with Validator
+    before_validation :normalize_uris
+
+    def attributes
+      {
+        id: id
+      }
+    end
+
+    def self.job_class
+      BrowseEverything::UploadJob
+    end
+
+    def job
+      self.class.job_class
+    end
+
+    def perform_job
+      job.perform(upload: self)
+    end
+
+    def perform_job_later(**options)
+      job.perform_later(upload: self, **options)
+    end
+
+    private
+
+    def normalize_uris
+      values = uris.flatten
+
+      self.uris = values
+    end
   end
 end
