@@ -5,10 +5,18 @@ inherit_gem:
 AllCops:
   TargetRubyVersion: 2.7
 
+Lint/DuplicateMethods:
+  Exclude:
+    - 'lib/browse_everything/upload.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/lib/browse_everything/driver/file_system_spec.rb'
     - 'spec/requests/browse_everything/providers_spec.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'app/controllers/browse_everything/providers_controller.rb'
 
 Style/GuardClause:
   Exclude:

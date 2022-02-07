@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "bootstrap-sass", "~> 3.0"
   spec.add_dependency "ejs", "~> 1.1"
+  spec.add_dependency "faraday", "~> 2.2"
   spec.add_dependency "jquery-rails", "~> 4.0"
   spec.add_dependency "rails", "~> 6.1.4", ">= 6.1.4.4"
   spec.add_dependency 'sass-rails', '~> 5.0'

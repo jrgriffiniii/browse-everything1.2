@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
+require 'faraday'
+
 module BrowseEverything
+  class Request < Faraday::Request; end
+  class URI < URI::Generic; end
+
   class Upload
     class Validator < ActiveModel::Validator
       def validate(model)
@@ -18,7 +23,7 @@ module BrowseEverything
 
     def attributes
       {
-        id: id
+        uris: uris
       }
     end
 
@@ -38,12 +43,17 @@ module BrowseEverything
       job.perform_later(upload: self, **options)
     end
 
-    private
-
     def normalize_uris
-      values = uris.flatten
+      values = @uris.flatten.map do |value|
+        if value.is_a?(URI::Generic)
+          value
+        else
+          URI(value)
+        end
+      end
 
       self.uris = values
     end
+    alias uris normalize_uris
   end
 end

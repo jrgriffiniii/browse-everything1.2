@@ -10,12 +10,21 @@ module BrowseEverything
 
       respond_to do |format|
         format.html do
-          render status: 500 if @upload.persisted?
-          redirect_to action: :index, layout: !request.xhr?
+          flash[:notice] = "Upload is enqueued for processing..."
+          redirect_to action: :index
         end
         format.json do
-          render json: "Server Error", status: 500 if @upload.nil?
           render json: @upload
+        end
+      end
+    rescue StandardError => error
+      respond_to do |format|
+        format.html do
+          Rails.logger.error("Failed to upload the files: #{error}")
+          render status: 500
+        end
+        format.json do
+          render json: "Server Error: #{error}", status: 500
         end
       end
     end
@@ -63,11 +72,15 @@ module BrowseEverything
     private
 
     def upload_params
-      params.permit(:id, :upload, :authenticity_token)
+      # params.require(:upload).permit(:id, :authenticity_token)
+      required = params.require(:upload)
+      required.permit!
     end
 
     def upload_attributes
-      upload_params[:upload] || {}
+      {
+        uris: upload_params.keys
+      }
     end
 
     def provider_id
