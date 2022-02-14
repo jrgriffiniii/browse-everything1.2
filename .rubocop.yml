@@ -11,12 +11,15 @@ Lint/DuplicateMethods:
 
 Metrics/BlockLength:
   Exclude:
+    - 'browse_everything.gemspec'
     - 'spec/lib/browse_everything/driver/file_system_spec.rb'
+    - 'spec/lib/browse_everything/upload_spec.rb'
     - 'spec/requests/browse_everything/providers_spec.rb'
 
 Metrics/MethodLength:
   Exclude:
     - 'app/controllers/browse_everything/providers_controller.rb'
+    - 'lib/browse_everything.rb'
 
 Style/GuardClause:
   Exclude:

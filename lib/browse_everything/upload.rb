@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
-require 'faraday'
-
 module BrowseEverything
-  class Request < Faraday::Request; end
-  class URI < URI::Generic; end
-
   class Upload
     class Validator < ActiveModel::Validator
       def validate(model)
-        model.errors.add(:uris, "There must be at least one URI for Upload Models") if model.uris.blank?
+        model.errors.add(:requests, "There must be at least one request for Request Models") if model.requests.blank?
+
+        model.requests.each do |request|
+          model.errors.add(:requests, "There must be at least one request for Request Models") if request.path.nil?
+        end
+      end
+    end
+
+    class FilesProxy
+      def attach(**_args)
+        # noop
       end
     end
 
@@ -17,13 +22,12 @@ module BrowseEverything
     include ActiveModel::Serialization
     include ActiveModel::Validations::Callbacks
 
-    attr_accessor :uris
+    attr_accessor :requests
     validates_with Validator
-    before_validation :normalize_uris
 
     def attributes
       {
-        uris: uris
+        requests: requests
       }
     end
 
@@ -35,25 +39,20 @@ module BrowseEverything
       self.class.job_class
     end
 
-    def perform_job
-      job.perform(upload: self)
+    def perform_job_now
+      job.perform_now(upload: self)
     end
 
     def perform_job_later(**options)
       job.perform_later(upload: self, **options)
     end
 
-    def normalize_uris
-      values = @uris.flatten.map do |value|
-        if value.is_a?(URI::Generic)
-          value
-        else
-          URI(value)
-        end
-      end
-
-      self.uris = values
+    def save
+      # @todo Integrate active_storage
     end
-    alias uris normalize_uris
+
+    def files
+      FilesProxy.new
+    end
   end
 end

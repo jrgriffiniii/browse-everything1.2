@@ -1,29 +1,13 @@
 # frozen_string_literal: true
+
 module BrowseEverything
-  class AssetRequestService
-    def initialize(uri:)
-      @uri = uri
-    end
-
-    def connection
-      @connection ||= Faraday.new(
-        url: @uri
-      )
-    end
-
-    def file?
-      true
-    end
-
-    def request(path: nil, params: nil, headers: nil)
+  class AssetRequestJob < ApplicationJob
+    def perform(uri:, headers: {}, params: {})
+      request = BrowseEverything::Request.new(uri: uri, headers: headers, params: params)
       read_buffer, write_buffer = IO.pipe
 
-      bytes = if file?
-                File.read(path)
-              else
-                response = connection.get(path, params, headers)
-                response.body
-              end
+      bytes = request.resolve
+
       write_buffer.write(bytes)
       write_buffer.close
       read_buffer
@@ -34,12 +18,15 @@ module BrowseEverything
     queue_as :default
 
     def perform(upload:)
-      upload.uris.each do |uri|
-        request_service = BrowseEverything::AssetRequestService.new(uri: uri)
-        bytestream = request_service.request(path: uri.path, params: uri.params, headers: uri.headers)
-        # upload.files.attach(bytestream.read)
+      upload.requests.each do |request|
+        bytestream = AssetRequestJob.perform_now(uri: request.uri.to_s, headers: request.headers, params: request.params)
+        upload.files.attach(
+          io: bytestream,
+          filename: request.filename,
+          content_type: request.content_type,
+          identify: false
+        )
         bytestream.close
-        yield upload
 
         upload.save
       end
